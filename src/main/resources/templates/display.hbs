@@ -1,0 +1,207 @@
+{{> top.hbs}}
+<div class="container">
+    <h1 style="text-align: center">Application to Rent</h1>
+<div class="row">
+  <div class="col-xs-3"><small>Last Name: </small><p>{{lastName}}</p></div>
+  <div class="col-xs-3"><small>First Name: </small><p>{{firstName}}</p></div>
+  <div class="col-xs-3"><small>Middle Name: </small><p>{{middleName}}</p></div>
+  <div class="col-xs-3"><small>Social Security: </small><p>{{ssn}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-4"><small>Other Names used: </small><p>{{otherNames}}</p></div>
+  <div class="col-xs-4"><small>Date of Bith: </small><p>{{dob}}</p></div>
+  <div class="col-xs-4"><small>Email: </small><p>{{email}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-4"><small>Mobile/Cell phone: </small><p>{{cellPhone}}</p></div>
+  <div class="col-xs-4"><small>Home phone: </small><p>{{homePhone}}</p></div>
+  <div class="col-xs-4"><small>Work phone: </small><p>{{workPhone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Photo ID/Type: </small><p>{{idType}}</p></div>
+  <div class="col-xs-3"><small>Number: </small><p>{{idNumber}}</p></div>
+  <div class="col-xs-3"><small>Issuing government: </small><p>{{idIssuer}}</p></div>
+  <div class="col-xs-3"><small>Exp. date: </small><p>{{idExp}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Present address: </small><p>{{addr1-street}}</p></div>
+  <div class="col-xs-4"><small>City: </small><p>{{addr1-city}}</p></div>
+  <div class="col-xs-2"><small>State: </small><p>{{addr1-state}}</p></div>
+  <div class="col-xs-2"><small>Zip: </small><p>{{addr1-zip}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Date in: </small><p>{{addr1-in}}</p></div>
+  <div class="col-xs-3"><small>Date out: </small><p>{{addr1-out}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Name: </small><p>{{addr1-landlord}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Phone: </small><p>{{addr1-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-8"><small>Reason for moving out: </small><p>{{addr1-reason}}</p></div>
+  <div class="col-xs-4"><small>Current rent: </small><p>{{addr1-rent}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Previous address: </small><p>{{addr2-street}}</p></div>
+  <div class="col-xs-4"><small>City: </small><p>{{addr2-city}}</p></div>
+  <div class="col-xs-2"><small>State: </small><p>{{addr2-state}}</p></div>
+  <div class="col-xs-2"><small>Zip: </small><p>{{addr2-zip}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Date in: </small><p>{{addr2-in}}</p></div>
+  <div class="col-xs-3"><small>Date out: </small><p>{{addr2-out}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Name: </small><p>{{addr2-landlord}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Phone: </small><p>{{addr2-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>Reason for moving out: </small><p>{{addr2-reason}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Next previous address: </small><p>{{addr3-street}}</p></div>
+  <div class="col-xs-4"><small>City: </small><p>{{addr3-city}}</p></div>
+  <div class="col-xs-2"><small>State: </small><p>{{addr3-state}}</p></div>
+  <div class="col-xs-2"><small>Zip: </small><p>{{addr3-zip}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Date in: </small><p>{{addr3-in}}</p></div>
+  <div class="col-xs-3"><small>Date out: </small><p>{{addr3-out}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Name: </small><p>{{addr3-landlord}}</p></div>
+  <div class="col-xs-3"><small>Owner/Agent Phone: </small><p>{{addr3-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>Reason for moving out: </small><p>{{addr3-reason}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-12"><small>Proposed occupants: </small><p>{{occupants}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-4"><small>Do you have pets? </small><p>{{pets}}</p></div>
+  <div class="col-xs-8"><small>Describe: </small><p>{{describePets}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-4"><small>Do you have a waterbed? </small><p>{{waterbed}}</p></div>
+  <div class="col-xs-8"><small>Describe: </small><p>{{describeWaterbed}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>How did you hear about this rental? </small><p>{{hearAbout}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Current Employer Name: </small><p>{{emp1-name}}</p></div>
+  <div class="col-xs-4"><small>Job Title or Position: </small><p>{{emp1-title}}</p></div>
+  <div class="col-xs-4"><small>Dates of Employment: </small><p>{{emp1-dates}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-6"><small>Employer address: </small><p>{{emp1-address}}</p></div>
+  <div class="col-xs-6"><small>Employer/HR phone number: </small><p>{{emp1-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-6"><small>City, State, Zip: </small><p>{{emp1-cityStateZip}}</p></div>
+  <div class="col-xs-6"><small>Name of supervisor/HR manager: </small><p>{{emp1-supervisor}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>Current gross income: </small><p>{{emp1-income}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Prior Employer Name: </small><p>{{emp2-name}}</p></div>
+  <div class="col-xs-4"><small>Job Title or Position: </small><p>{{emp2-title}}</p></div>
+  <div class="col-xs-4"><small>Dates of Employment: </small><p>{{emp2-dates}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-6"><small>Employer address: </small><p>{{emp2-address}}</p></div>
+  <div class="col-xs-6"><small>Employer/HR phone number: </small><p>{{emp2-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-6"><small>City, State, Zip: </small><p>{{emp2-cityStateZip}}</p></div>
+  <div class="col-xs-6"><small>Name of supervisor/HR manager: </small><p>{{emp2-supervisor}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-12"><small>Other Income: </small><p>{{otherIncome}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-4"><small>Name of your bank: </small><p>{{bankName}}</p></div>
+  <div class="col-xs-4"><small>Branch or address: </small><p>{{bankBranch}}</p></div>
+  <div class="col-xs-4"><small>Account Number: </small><p>{{bankAccountNumber}}</p></div>
+</div>
+<div><hr></div>
+<div>List of all financial obligations</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name of Creditor: </small><p>{{debt1-creditor}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{debt1-address}}</p></div>
+  <div class="col-xs-3"><small>Phone: </small><p>{{debt1-phone}}</p></div>
+  <div class="col-xs-3"><small>Monthly Payment: </small><p>{{debt1-payment}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name of Creditor: </small><p>{{debt2-creditor}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{debt2-address}}</p></div>
+  <div class="col-xs-3"><small>Phone: </small><p>{{debt2-phone}}</p></div>
+  <div class="col-xs-3"><small>Monthly Payment: </small><p>{{debt2-payment}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name of Creditor: </small><p>{{debt3-creditor}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{debt3-address}}</p></div>
+  <div class="col-xs-3"><small>Phone: </small><p>{{debt3-phone}}</p></div>
+  <div class="col-xs-3"><small>Monthly Payment: </small><p>{{debt3-payment}}</p></div>
+</div>
+<div><hr></div>
+<div>In case of emergency, notify:</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name: </small><p>{{emergency1-name}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{emergency1-address}}</p></div>
+  <div class="col-xs-3"><small>Relationship: </small><p>{{emergency1-relation}}</p></div>
+  <div class="col-xs-3"><small>Phone: </small><p>{{emergency1-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name: </small><p>{{emergency2-name}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{emergency2-address}}</p></div>
+  <div class="col-xs-3"><small>Relationship: </small><p>{{emergency2-relation}}</p></div>
+  <div class="col-xs-3"><small>Phone: </small><p>{{emergency2-phone}}</p></div>
+</div>
+<div><hr></div>
+<div>Personal References:</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name: </small><p>{{reference1-name}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{reference1-address}}</p></div>
+  <div class="col-xs-2"><small>Length of Acquaintance: </small><p>{{reference1-length}}</p></div>
+  <div class="col-xs-2"><small>Occupation: </small><p>{{reference1-occupation}}</p></div>
+  <div class="col-xs-2"><small>Phone: </small><p>{{reference1-phone}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Name: </small><p>{{reference2-name}}</p></div>
+  <div class="col-xs-3"><small>Address: </small><p>{{reference2-address}}</p></div>
+  <div class="col-xs-2"><small>Length of Acquaintance: </small><p>{{reference2-length}}</p></div>
+  <div class="col-xs-2"><small>Occupation: </small><p>{{reference2-occupation}}</p></div>
+  <div class="col-xs-2"><small>Phone: </small><p>{{reference2-phone}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-3"><small>Automobile: Make: </small><p>{{car1-make}}</p></div>
+  <div class="col-xs-3"><small>Model: </small><p>{{car1-model}}</p></div>
+  <div class="col-xs-3"><small>Year: </small><p>{{car1-year}}</p></div>
+  <div class="col-xs-3"><small>License Number: </small><p>{{car1-plates}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"><small>Automobile: Make: </small><p>{{car2-make}}</p></div>
+  <div class="col-xs-3"><small>Model: </small><p>{{car2-model}}</p></div>
+  <div class="col-xs-3"><small>Year: </small><p>{{car2-year}}</p></div>
+  <div class="col-xs-3"><small>License Number: </small><p>{{car2-plates}}</p></div>
+</div>
+<div><hr></div>
+<div class="row">
+  <div class="col-xs-12"><small>Have you ever filed for bankruptcy? </small><p>{{bankruptcy}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>Have you ever been evicted or asked to move? </small><p>{{evicted}}</p></div>
+</div>
+<div class="row">
+  <div class="col-xs-12"><small>Have you ever been convicted of selling, distributing or manufacturing illegal drugs? </small><p>{{drugs}}</p></div>
+</div>
+<hr>
+<div><small>This rental application was prepared at rentshape.com</small></div>
+</div>
+{{> bottom.hbs}}
