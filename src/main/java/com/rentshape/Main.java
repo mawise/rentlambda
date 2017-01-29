@@ -9,7 +9,10 @@ import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
+import spark.Service;
 import spark.servlet.SparkApplication;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -23,22 +26,35 @@ public class Main implements SparkApplication {
     private static String HDR = HtmlChunks.header;
     private static String FTR = HtmlChunks.footer;
 
-    private static String root;
     private static String tableName;
     private static int port;
+    private static int httpPort;
+    private static String redirectRoot;
+
+    private static String keyStore;
+    private static String keyPass;
+
+    private static Logger LOG = LoggerFactory.getLogger(Main.class);
 
     static {
-        String env = "prod"; // TODO: use env variable?
-        if (env.equals("prod")) {
-            //Prod
-            root = "rentshape.com";
-            tableName = "ProdRent";
-            port = 80;
-        } else {
-            //Test
-            root = "localhost";
+        String env = System.getenv("RENTSHAPE_ENV");
+
+        keyStore = System.getenv("RENTSHAPE_KEYSTORE");
+        keyPass = System.getenv("RENTSHAPE_KEYPASS");
+
+        //String env = "dev"; // TODO: use env variable?
+        if (env.equalsIgnoreCase("dev")){
+            LOG.info("Using DEV configuration");
             tableName = "TestRent";
-            port = 4567;
+            port = 8443;
+            httpPort = 8080;
+            redirectRoot = "https://localhost:8443";
+        } else { //prod
+            LOG.info("Using PROD configuration");
+            tableName = "ProdRent";
+            port = 443;
+            httpPort = 80;
+            redirectRoot = "https://rentshape.com";
         }
     }
     private static ObjectMapper mapper = new ObjectMapper();
@@ -52,6 +68,7 @@ public class Main implements SparkApplication {
         Table table = dynamoDB.getTable(tableName);
 
         port(port);
+        secure(keyStore, keyPass, null, null);
 
         get("/", (req, res) -> {
             StringBuilder sb = new StringBuilder();
@@ -126,5 +143,12 @@ public class Main implements SparkApplication {
             return "";
         });
 
+        // redirect http to https
+        Service http = Service.ignite().port(httpPort);
+        http.get("/*", (req, res) -> {
+            String path = req.contextPath();
+            res.redirect(redirectRoot);
+            return "";
+        });
     }
 }
