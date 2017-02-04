@@ -1,5 +1,7 @@
 package com.rentshape;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -27,12 +29,16 @@ public class Main implements SparkApplication {
     private static String FTR = HtmlChunks.footer;
 
     private static String tableName;
-    private static int port;
+    private static int httpsPort;
     private static int httpPort;
     private static String redirectRoot;
 
     private static String keyStore;
     private static String keyPass;
+
+    private static AWSCredentialsProvider credentialsProvider;
+
+    private static boolean secureMode = false; // set to true for app managed ssl
 
     private static Logger LOG = LoggerFactory.getLogger(Main.class);
 
@@ -42,33 +48,36 @@ public class Main implements SparkApplication {
         keyStore = System.getenv("RENTSHAPE_KEYSTORE");
         keyPass = System.getenv("RENTSHAPE_KEYPASS");
 
-        //String env = "dev"; // TODO: use env variable?
-        if (env.equalsIgnoreCase("dev")){
+        if (null != env && env.equalsIgnoreCase("dev")){
             LOG.info("Using DEV configuration");
             tableName = "TestRent";
-            port = 8443;
+            httpsPort = 8443;
             httpPort = 8080;
             redirectRoot = "https://localhost:8443";
+            credentialsProvider = new ProfileCredentialsProvider();
         } else { //prod
             LOG.info("Using PROD configuration");
             tableName = "ProdRent";
-            port = 443;
+            httpsPort = 443;
             httpPort = 80;
             redirectRoot = "https://rentshape.com";
+            credentialsProvider = new InstanceProfileCredentialsProvider();
         }
     }
     private static ObjectMapper mapper = new ObjectMapper();
 
     public void init(){
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(
-                new ProfileCredentialsProvider());
+
+        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
         dynamoDBClient.withRegion(Regions.US_WEST_2);
         DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
 
         Table table = dynamoDB.getTable(tableName);
 
-        port(port);
-        secure(keyStore, keyPass, null, null);
+        if (secureMode) {
+            port(httpsPort);
+            secure(keyStore, keyPass, null, null);
+        }
 
         get("/", (req, res) -> {
             StringBuilder sb = new StringBuilder();
@@ -104,24 +113,35 @@ public class Main implements SparkApplication {
         });
 
         post("/application", (req, res) -> {
-            ApplicationData data = new ApplicationData();
-            data.newUuid();
+            try {
+                ApplicationData data = new ApplicationData();
+                data.newUuid();
 
-            for (String field : ApplicationData.fields.keySet()){
-                String value = req.queryParams(field);
-                data.put(field, value);
+                for (String field : ApplicationData.fields.keySet()) {
+                    String value = req.queryParams(field);
+                    data.put(field, value);
+                }
+
+                PutItemOutcome outcome = table.putItem(data.toItem());
+
+                String link = "/application/" + data.getUuid();
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("<p> Use the following private link to share or view your rental application: <br>");
+                sb.append("<a href=\"");
+                sb.append(link);
+                sb.append("\">" + "rentshape.com" + link + "</a>");
+
+                return HDR + sb.toString() + FTR;
+            } catch (Exception e){
+                LOG.error("exception with POST to /application", e);
+                StringBuffer msg = new StringBuffer();
+                msg.append(e.getMessage() + "\n");
+                for (StackTraceElement line : e.getStackTrace()){
+                    msg.append(line.toString() + "\n");
+                }
+                return msg;
             }
-            PutItemOutcome outcome = table.putItem(data.toItem());
-
-            String link = "/application/" + data.getUuid();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("<p> Use the following private link to share or view your rental application: <br>");
-            sb.append("<a href=\"");
-            sb.append(link);
-            sb.append("\">" + "rentshape.com" + link + "</a>");
-
-            return HDR + sb.toString() + FTR;
         });
 
         get("/application/:id", (req, res) -> {
@@ -129,7 +149,8 @@ public class Main implements SparkApplication {
             Item item = table.getItem(ApplicationData.UUID, id);
 
             if (item == null){
-                return new ModelAndView(new HashMap<String, String>(), "display.hbs");
+                Thread.sleep(1000);
+                return new ModelAndView(null, "notfound.hbs");
             }
             String json = item.toJSON();
             Map<String, String> appData = mapper.readValue(
@@ -143,12 +164,15 @@ public class Main implements SparkApplication {
             return "";
         });
 
-        // redirect http to https
-        Service http = Service.ignite().port(httpPort);
-        http.get("/*", (req, res) -> {
-            String path = req.contextPath();
-            res.redirect(redirectRoot);
-            return "";
-        });
+        Service http;
+        if (secureMode) {
+            // redirect http to https
+            http = Service.ignite().port(httpPort);
+            http.get("/*", (req, res) -> {
+                String path = req.contextPath();
+                res.redirect(redirectRoot);
+                return "";
+            });
+        }
     }
 }
