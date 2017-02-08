@@ -2,12 +2,18 @@ package com.rentshape;
 
 public class HtmlChunks {
 
+    //TODO: parse this from navbar.hbs
     public static String navbar =
             "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n" +
             "    <div class=\"container\">\n" +
             "        <div class=\"navbar-header\">\n" +
             "            <a class=\"navbar-brand\" href=\"/\">Rentshape</a>\n" +
             "        </div>\n" +
+            "        <div id=\"navbar\" class=\"collapse navbar-collapse\">\n" +
+            "            <ul class=\"nav navbar-nav\">\n" +
+            "                <li><a href=\"/privacy\">Privacy</a></li>\n" +
+            "            </ul>\n" +
+            "        </div><!--/.nav-collapse -->" +
             "    </div>\n" +
             "</nav>";
 

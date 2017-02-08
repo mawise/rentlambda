@@ -93,7 +93,7 @@ public class ApplicationData {
         fields.put("emp1-supervisor", "Name of your supervisor/HR manager");
         fields.put("emp1-income", "Current gross income");
 
-        fields.put("emp2-name", "Prioir Employer Name");
+        fields.put("emp2-name", "Prior Employer Name");
         fields.put("emp2-title", "Job Title or Position");
         fields.put("emp2-dates", "Dates of Employment");
         fields.put("emp2-address", "Employer address");

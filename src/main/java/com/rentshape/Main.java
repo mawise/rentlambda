@@ -159,6 +159,10 @@ public class Main implements SparkApplication {
             return new ModelAndView(appData, "display.hbs");
         }, new HandlebarsTemplateEngine());
 
+        get("/privacy",
+                (req,res) -> new ModelAndView(null, "privacy.hbs"),
+                new HandlebarsTemplateEngine());
+
         get("/*", (req, res) -> {
             res.redirect("/");
             return "";
