@@ -11,7 +11,7 @@ row = 0
 [3, "Social Security", "ssn"],
 
 [4, "Other Names used", "otherNames"],
-[4, "Date of Bith", "dob"],
+[4, "Date of Birth", "dob"],
 [4, "Email", "email"],
 
 [4, "Mobile/Cell phone", "cellPhone"],

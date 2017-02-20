@@ -20,6 +20,7 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static spark.Spark.*;
 
@@ -27,6 +28,8 @@ public class Main implements SparkApplication {
 
     private static String HDR = HtmlChunks.header;
     private static String FTR = HtmlChunks.footer;
+
+    private static String X_Forwarded_Proto = "x-forwarded-proto";
 
     private static String tableName;
     private static int httpsPort;
@@ -79,6 +82,26 @@ public class Main implements SparkApplication {
             secure(keyStore, keyPass, null, null);
         }
 
+        /**
+         *  See: https://aws.amazon.com/premiumsupport/knowledge-center/redirect-http-https-elb/
+         *  x-forwarded-proto header is populated by the elastic load balancer with the client protocol
+         *  NB: Header is "x-forwarded-proto" even though docs state "X-Forwarded-Proto"
+         */
+        before((request, response) -> {
+            // Because I don't trust AWS ELB header casing not to change
+            Map<String, String> downcaseHeaders = downcaseMapOfSet(request.headers());
+            if (downcaseHeaders.keySet().contains(X_Forwarded_Proto)){
+                String protocol = request.headers(downcaseHeaders.get(X_Forwarded_Proto));
+                if (protocol.equals("http")){
+                    String requestUrl = request.url();
+                    String redirectUrl = setHttpsForRedirect(requestUrl);
+                    // TODO: remove this log line if we start getting lots of requests
+                    LOG.info("Redirecting from " + requestUrl + " to " + redirectUrl);
+                    response.redirect(redirectUrl, 301); //moved permanently
+                }
+            }
+        });
+
         get("/", (req, res) -> {
             StringBuilder sb = new StringBuilder();
             sb.append("<p>Here is an online rental application you can fill out and share with potential landlords.  The form was designed for use in California, but you can use it wherever you want.");
@@ -130,7 +153,7 @@ public class Main implements SparkApplication {
                 sb.append("<p> Use the following private link to share or view your rental application: <br>");
                 sb.append("<a href=\"");
                 sb.append(link);
-                sb.append("\">" + "rentshape.com" + link + "</a>");
+                sb.append("\">" + "https://rentshape.com" + link + "</a>");
 
                 return HDR + sb.toString() + FTR;
             } catch (Exception e){
@@ -163,6 +186,8 @@ public class Main implements SparkApplication {
                 (req,res) -> new ModelAndView(null, "privacy.hbs"),
                 new HandlebarsTemplateEngine());
 
+        get("/health", (req, res) -> "OK");
+
         get("/*", (req, res) -> {
             res.redirect("/");
             return "";
@@ -178,5 +203,33 @@ public class Main implements SparkApplication {
                 return "";
             });
         }
+    }
+
+    public static String setHttpsForRedirect(String url){
+        try {
+            if (url.startsWith("http://")){
+                String suffix = url.substring(4);
+                return "https" + suffix;
+            } else {
+                return url;
+            }
+        } catch (Exception e){
+            LOG.warn("Exception converting to https", e);
+            return redirectRoot;
+        }
+    }
+
+    /**
+     * Generates a map of downcase -> original
+     * allows map.keySet().contains() along with lookup to original
+     * @param set
+     * @return
+     */
+    public static Map<String, String> downcaseMapOfSet(Set<String> set){
+        Map<String, String> map = new HashMap<>();
+        for (String s : set){
+            map.put(s.toLowerCase(), s);
+        }
+        return map;
     }
 }

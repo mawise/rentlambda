@@ -1,7 +1,7 @@
 package com.rentshape;
 
 /**
- * Created by matt on 1/27/17.
+ * Use this for testing and dev, the Tomcat container initializes the app directly
  */
 public class Runner {
     public static void main(String[] args){

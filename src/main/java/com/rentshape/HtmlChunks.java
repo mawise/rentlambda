@@ -2,6 +2,18 @@ package com.rentshape;
 
 public class HtmlChunks {
 
+    public static String googleAnalyticsScript =
+            "<script>\n" +
+            "  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n" +
+            "  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n" +
+            "  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n" +
+            "  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');\n" +
+            "\n" +
+            "  ga('create', 'UA-91695228-1', 'auto');\n" +
+            "  ga('send', 'pageview');\n" +
+            "\n" +
+            "</script>";
+
     //TODO: parse this from navbar.hbs
     public static String navbar =
             "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n" +
@@ -12,6 +24,7 @@ public class HtmlChunks {
             "        <div id=\"navbar\" class=\"collapse navbar-collapse\">\n" +
             "            <ul class=\"nav navbar-nav\">\n" +
             "                <li><a href=\"/privacy\">Privacy</a></li>\n" +
+            "                <li><a href=\"https://blogrentshape.wordpress.com/2017/02/05/how-to-rent-a-house-in-the-bay-area/\">Blog</a></li>\n" +
             "            </ul>\n" +
             "        </div><!--/.nav-collapse -->" +
             "    </div>\n" +
@@ -47,7 +60,10 @@ public class HtmlChunks {
             "<small>This site is owned and operated by Rentshape LLC, Dover, Delaware.</small>\n" +
             "</div>\n" +
             "</div>\n" +
+            googleAnalyticsScript +
             "</body>\n" +
             "</html>";
+
+
 
 }
