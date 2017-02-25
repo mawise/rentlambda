@@ -10,8 +10,8 @@ import java.io.InputStream;
 public class HtmlChunks {
     private static Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    public static String googleAnalyticsScript = getResource("templates/gascript.hbs");
-    public static String navbar = getResource("templates/navbar.hbs");
+    public static String googleAnalyticsScript = getResource("/templates/gascript.hbs");
+    public static String navbar = getResource("/templates/navbar.hbs");
 
     public static String header =
             "<html>\n" +
@@ -49,7 +49,7 @@ public class HtmlChunks {
 
 
     private static String getResource(String path) {
-        try(InputStream is = ClassLoader.getSystemResourceAsStream(path)) {
+        try(InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             return IOUtils.toString(is);
         } catch (IOException e) {
             LOG.error("Failed to read string from resource: " + path, e);
