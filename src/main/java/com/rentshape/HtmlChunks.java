@@ -1,34 +1,17 @@
 package com.rentshape;
 
+import com.amazonaws.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class HtmlChunks {
+    private static Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    public static String googleAnalyticsScript =
-            "<script>\n" +
-            "  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n" +
-            "  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n" +
-            "  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n" +
-            "  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');\n" +
-            "\n" +
-            "  ga('create', 'UA-91695228-1', 'auto');\n" +
-            "  ga('send', 'pageview');\n" +
-            "\n" +
-            "</script>";
-
-    //TODO: parse this from navbar.hbs
-    public static String navbar =
-            "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n" +
-            "    <div class=\"container\">\n" +
-            "        <div class=\"navbar-header\">\n" +
-            "            <a class=\"navbar-brand\" href=\"/\">Rentshape</a>\n" +
-            "        </div>\n" +
-            "        <div id=\"navbar\" class=\"collapse navbar-collapse\">\n" +
-            "            <ul class=\"nav navbar-nav\">\n" +
-            "                <li><a href=\"/privacy\">Privacy</a></li>\n" +
-            "                <li><a href=\"https://blogrentshape.wordpress.com/2017/02/05/how-to-rent-a-house-in-the-bay-area/\">Blog</a></li>\n" +
-            "            </ul>\n" +
-            "        </div><!--/.nav-collapse -->" +
-            "    </div>\n" +
-            "</nav>";
+    public static String googleAnalyticsScript = getResource("templates/gascript.hbs");
+    public static String navbar = getResource("templates/navbar.hbs");
 
     public static String header =
             "<html>\n" +
@@ -65,5 +48,13 @@ public class HtmlChunks {
             "</html>";
 
 
+    private static String getResource(String path) {
+        try(InputStream is = ClassLoader.getSystemResourceAsStream(path)) {
+            return IOUtils.toString(is);
+        } catch (IOException e) {
+            LOG.error("Failed to read string from resource: " + path, e);
+            return "";
+        }
+    }
 
 }
