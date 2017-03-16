@@ -47,13 +47,34 @@ public class HtmlChunks {
             "</body>\n" +
             "</html>";
 
-
-    private static String getResource(String path) {
-        try(InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
+    // TODO: Figure this out
+    private static String getResource(String resourcePath) {
+        String path = resourcePath.startsWith("/") ? resourcePath.substring(1) : resourcePath;
+        InputStream is = null;
+        try {
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            if (is == null){
+                is = ClassLoader.getSystemResourceAsStream(path);
+            }
+            if (is == null) {
+                is = Thread.currentThread().getContextClassLoader().getResourceAsStream("/" + path);
+            }
+            if (is == null) {
+                is = ClassLoader.getSystemResourceAsStream("/" + path);
+            }
             return IOUtils.toString(is);
         } catch (IOException e) {
             LOG.error("Failed to read string from resource: " + path, e);
             return "";
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                LOG.error("Failed to close InputStream from resource: " + path, e);
+                return "";
+            }
         }
     }
 

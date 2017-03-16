@@ -11,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
@@ -18,6 +19,7 @@ import spark.Service;
 import spark.servlet.SparkApplication;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -147,7 +149,7 @@ public class Main implements SparkApplication {
 
                 PutItemOutcome outcome = table.putItem(data.toItem());
 
-                String link = "/application/" + data.getUuid();
+                String link = "/viewapplication#" + data.getUuid();
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("<p> Use the following private link to share or view your rental application: <br>");
@@ -167,19 +169,22 @@ public class Main implements SparkApplication {
             }
         });
 
+        // old-style, deprecate
         get("/application/:id", (req, res) -> {
             String id = req.params(":id");
-            Item item = table.getItem(ApplicationData.UUID, id);
+            return renderApplication(id, table);
+        }, new HandlebarsTemplateEngine());
 
-            if (item == null){
-                Thread.sleep(1000);
-                return new ModelAndView(null, "notfound.hbs");
-            }
-            String json = item.toJSON();
-            Map<String, String> appData = mapper.readValue(
-                    json, new TypeReference<HashMap<String, String>>() {});
+        // new style, includes JS to submit fragment in form
+        // expects /viewapplication#application-id in browser
+        get("/viewapplication", (req, res) -> {
+            return new ModelAndView(new HashMap<>(), "viewappform.hbs");
+        }, new HandlebarsTemplateEngine());
 
-            return new ModelAndView(appData, "display.hbs");
+        // new style, renders from a form submit
+        post("/viewapplication", (req, res) -> {
+            String id = req.queryParams("code");
+            return renderApplication(id, table);
         }, new HandlebarsTemplateEngine());
 
         get("/privacy",
@@ -231,5 +236,19 @@ public class Main implements SparkApplication {
             map.put(s.toLowerCase(), s);
         }
         return map;
+    }
+
+    private static ModelAndView renderApplication(String id, Table table) throws IOException, InterruptedException {
+        Item item = table.getItem(ApplicationData.UUID, id);
+
+        if (item == null){
+            Thread.sleep(1000); //slow down brute-force searches
+            return new ModelAndView(null, "notfound.hbs");
+        }
+        String json = item.toJSON();
+        Map<String, String> appData = mapper.readValue(
+                json, new TypeReference<HashMap<String, String>>() {});
+
+        return new ModelAndView(appData, "display.hbs");
     }
 }

@@ -1,0 +1,33 @@
+{{> top.hbs}}
+<!--
+This page expects a fragment in the browser's url that corresponds to the application ID.
+The javascript code grabs that fragment, sticks it the from and submits the form.
+By doing id submission this way, users can still copy and share a url, but the ID is only
+ever submitted over the internet as  encrypted (https) post data.
+-->
+
+<div class="container">
+    <form id="formid" method="post">
+        <div class="form-group">
+            <label for="code">Loading...</label>
+            <input type="hidden" class="form-control" id="appcode" name="code">
+        </div>
+    </form>
+    <p>If the application does not load, please ensure you have Javascript enabled and try again.</p>
+</div>
+
+<script>
+function getFragment() {
+    return window.location.hash.substr(1);
+}
+function populateField() {
+    var frag = getFragment();
+    document.getElementById("appcode").value = frag;
+}
+function submitFrag() {
+    populateField();
+    document.getElementById("formid").submit();
+}
+window.onload(submitFrag());
+</script>
+{{> bottom.hbs}}
